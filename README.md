@@ -4,7 +4,6 @@ This project implements a simple registration form using Node.js and Express.js 
 
 ## Features
 - User registration with validation for email, password and phone number
-- Password hashing using bcrypt for security
 - MongoDB integration for storing user data
 - Responsive design for mobile and desktop browsers
 
@@ -31,4 +30,3 @@ This project implements a simple registration form using Node.js and Express.js 
 - Express.js
 - MongoDB
 - Mongoose
-- bcrypt
