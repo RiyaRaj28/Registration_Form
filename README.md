@@ -12,7 +12,7 @@ This project implements a simple registration form using Node.js and Express.js 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/registration-form.git
+   git clone https://github.com/RiyaRaj28/Registration_Form.git
    
 2. Install dependencies:
    ```bash
