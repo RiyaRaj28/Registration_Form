@@ -4,6 +4,7 @@ const app = express();
 const path = require("path");
 require("./db/conn"); 
 const Register = require("./models/registers")
+const bcrypt = require("bcryptjs") 
 
 
 const port = process.env.PORT || 3000; 
@@ -25,23 +26,36 @@ app.get("/", (req,res)=> {
     res.render("index");
 });
 
-app.post("/index", async(req,res) => {
+app.get("/register", (req, res) => {
+    res.render("register");
+})
+
+app.get("/login", (req, res) => {
+    res.render("login"); 
+})
+
+app.post("/register", async(req,res) => {
     try {
 
         const password = req.body.password;
-        const cpassword = req.body.cpassword;
+        const cpassword = req.body.confirmpassword;
 
-        if(password === cpassword){
+        if(password.toString() === cpassword.toString()){
             const registerEmployee = new Register({
-                fullname : req.body.fullname,
-                username : req.body.username,
-                email : req.body.email,
-                phone : req.body.phone,
-                gender : req.body.gender,
-                password : req.body.password,
-                cpassword : req.body.cpassword
+                firstname: req.body.firstname,
+                lastname:req.body.lastname,
+                email:req.body.email,
+                gender:req.body.gender,
+                phone:req.body.phone,
+                age:req.body.age,
+                password:req.body.password,
+                confirmpassword:req.body.confirmpassword 
             })
+            console.log("the success part "+ registerEmployee);
+
+
             const registered = await registerEmployee.save();
+            console.log("The page part" + registered)
             res.status(201).render("index"); 
             
         }else{
@@ -50,13 +64,40 @@ app.post("/index", async(req,res) => {
         
     } catch (error) {
         res.status(400).send(error); 
+        console.log("the error part page :")
     }
 }
 )
 
-// app.get("/register", (req,res)=> {
-//     res.render("register"); 
-// })
+app.post("/login", async(req, res) => {
+    try{
+        const email = req.body.email;
+        const password = req.body.password;
+
+        console.log(`${email} and password is ${password}`)
+        const useremail = await Register.findOne({email:email});  //email entered by the user and email id db are same?
+
+        if(useremail.password === password){
+            res.status(201).render("index");
+        }else{
+            res.send("invalid login details");
+        }
+    }
+    catch(error){
+        res.status(400).send("invalid login details")
+    }
+})
+
+
+const securePassword = async(password) => {
+    const passwordHash = await bcrypt.hash(password, 10);
+    console.log(passwordHash); 
+
+    const passwordmatch = await bcrypt.compare("riya", passwordHash);
+    console.log(passwordmatch); 
+}
+
+securePassword("riya")
 
 app.listen(port, ()=> {
     console.log(`Server is running at port num ${port}`);
